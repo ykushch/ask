@@ -146,7 +146,7 @@ echo ""
 if [ -n "$PATH_ADDED" ]; then
     echo "⚠ To start using ask, run this in your terminal:"
     echo ""
-    echo "  source ~/.$PATH_ADDED"
+    echo "  export PATH=\"\$HOME/.local/bin:\$PATH\""
     echo ""
     echo "  (or open a new terminal window)"
     echo ""
