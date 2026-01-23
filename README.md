@@ -1,6 +1,19 @@
-# ask
+```
+            _
+  __ _ ___| | __
+ / _` / __| |/ /
+| (_| \__ \   <
+ \__,_|___/_|\_\
+```
 
-A CLI tool that translates natural language into shell commands using local AI models via [Ollama](https://ollama.com).
+[![Go](https://img.shields.io/badge/Go-1.21-00ADD8?logo=go&logoColor=white)](https://golang.org)
+[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-lightgrey)](https://github.com/ykushch/ask)
+[![Ollama](https://img.shields.io/badge/Ollama-local%20AI-1a1a2e)](https://ollama.com)
+[![Runs Locally](https://img.shields.io/badge/runs%20100%25-locally-green)](#)
+
+**Natural language to shell commands, powered by local AI.**
+
+A CLI tool that translates what you mean into what to type, using [Ollama](https://ollama.com) models running entirely on your machine.
 
 ## Install
 
