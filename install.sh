@@ -129,20 +129,29 @@ add_to_path() {
     fi
 }
 
+PATH_ADDED=""
 if ! echo "$PATH" | grep -q "$HOME/.local/bin"; then
     shell_name=$(basename "$SHELL")
     case "$shell_name" in
-        zsh)  add_to_path "$HOME/.zshrc" ;;
-        bash) add_to_path "$HOME/.bashrc" ;;
-        *)    add_to_path "$HOME/.profile" ;;
+        zsh)  add_to_path "$HOME/.zshrc" ; PATH_ADDED="zshrc" ;;
+        bash) add_to_path "$HOME/.bashrc" ; PATH_ADDED="bashrc" ;;
+        *)    add_to_path "$HOME/.profile" ; PATH_ADDED="profile" ;;
     esac
-    export PATH="$INSTALL_DIR:$PATH"
-    echo "Added $INSTALL_DIR to PATH (restart your shell or run: export PATH=\"\$HOME/.local/bin:\$PATH\")"
 fi
 
 echo ""
 echo "✓ ask installed successfully!"
 echo ""
+
+if [ -n "$PATH_ADDED" ]; then
+    echo "⚠ To start using ask, run this in your terminal:"
+    echo ""
+    echo "  source ~/.$PATH_ADDED"
+    echo ""
+    echo "  (or open a new terminal window)"
+    echo ""
+fi
+
 echo "Usage:"
 echo "  ask list all go files in this directory"
 echo "  ask                  # interactive mode"
