@@ -1,0 +1,8 @@
+# Binary
+ask
+
+# IDE
+.idea/
+.vscode/
+*.swp
+.DS_Store
