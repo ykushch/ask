@@ -133,9 +133,9 @@ PATH_ADDED=""
 if ! echo "$PATH" | grep -q "$HOME/.local/bin"; then
     shell_name=$(basename "$SHELL")
     case "$shell_name" in
-        zsh)  add_to_path "$HOME/.zshrc" ; PATH_ADDED="zshrc" ;;
-        bash) add_to_path "$HOME/.bashrc" ; PATH_ADDED="bashrc" ;;
-        *)    add_to_path "$HOME/.profile" ; PATH_ADDED="profile" ;;
+        zsh)  add_to_path "$HOME/.zshrc" create ; PATH_ADDED="zshrc" ;;
+        bash) add_to_path "$HOME/.bashrc" create ; PATH_ADDED="bashrc" ;;
+        *)    add_to_path "$HOME/.profile" create ; PATH_ADDED="profile" ;;
     esac
 fi
 
