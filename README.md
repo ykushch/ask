@@ -82,6 +82,14 @@ export ASK_MODEL=deepseek-r1
 ask list running docker containers
 ```
 
+### Update
+
+```bash
+ask --update
+```
+
+Self-updates the binary to the latest GitHub release. A background version check also runs on every invocation — if a newer version is available, you'll see a notice after the command completes.
+
 ### Check version
 
 ```bash

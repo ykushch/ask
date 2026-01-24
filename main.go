@@ -7,7 +7,9 @@ import (
 	"strings"
 )
 
-const version = "0.1.0"
+// version is set at build time via -ldflags "-X main.version=..."
+// Falls back to "dev" for local builds.
+var version = "dev"
 
 func getEnvDefault(key, fallback string) string {
 	if val := os.Getenv(key); val != "" {
@@ -27,7 +29,17 @@ func main() {
 	var showVersion bool
 	flag.BoolVar(&showVersion, "v", false, "Show version")
 	flag.BoolVar(&showVersion, "version", false, "Show version")
+	var doUpdate bool
+	flag.BoolVar(&doUpdate, "update", false, "Update ask to the latest version")
 	flag.Parse()
+
+	if doUpdate {
+		if err := selfUpdate(); err != nil {
+			fmt.Fprintf(os.Stderr, "update failed: %v\n", err)
+			os.Exit(1)
+		}
+		return
+	}
 
 	if showVersion {
 		fmt.Printf("ask version %s\n", version)
@@ -35,6 +47,10 @@ func main() {
 		fmt.Printf("ollama: %s\n", ollamaHost())
 		return
 	}
+
+	// Start background version check
+	updateCh := make(chan string, 1)
+	go backgroundVersionCheck(updateCh)
 
 	if err := checkOllama(); err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
@@ -44,6 +60,7 @@ func main() {
 	args := flag.Args()
 	if len(args) == 0 {
 		runInteractive(*model)
+		printUpdateNotice(updateCh)
 		return
 	}
 
@@ -55,4 +72,16 @@ func main() {
 		os.Exit(1)
 	}
 	confirmAndRun(command)
+	printUpdateNotice(updateCh)
+}
+
+func printUpdateNotice(ch <-chan string) {
+	select {
+	case tag := <-ch:
+		if tag != "" {
+			fmt.Fprintf(os.Stderr, "\nA new version of ask is available (%s). Run \"ask --update\" to upgrade.\n", tag)
+		}
+	default:
+		// Check didn't finish in time, skip silently
+	}
 }
