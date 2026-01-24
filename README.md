@@ -11,6 +11,8 @@
 [![Ollama](https://img.shields.io/badge/Ollama-local%20AI-1a1a2e)](https://ollama.com)
 [![Runs Locally](https://img.shields.io/badge/runs%20100%25-locally-green)](#)
 
+<img src="assets/ask-demo.gif" alt="ask demo" width="720" />
+
 **Natural language to shell commands, powered by local AI.**
 
 A CLI tool that translates what you mean into what to type, using [Ollama](https://ollama.com) models running entirely on your machine.
