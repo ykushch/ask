@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
@@ -163,14 +164,54 @@ func selfUpdate() error {
 	return nil
 }
 
+const updateCheckInterval = 24 * time.Hour
+
+func updateCachePath() string {
+	home, _ := os.UserHomeDir()
+	return filepath.Join(home, ".ask", "last-update-check")
+}
+
+// readCachedVersion returns the cached latest version if the cache is fresh.
+func readCachedVersion() (string, bool) {
+	path := updateCachePath()
+	info, err := os.Stat(path)
+	if err != nil {
+		return "", false
+	}
+	if time.Since(info.ModTime()) > updateCheckInterval {
+		return "", false
+	}
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return "", false
+	}
+	return strings.TrimSpace(string(data)), true
+}
+
+func writeCachedVersion(tag string) {
+	path := updateCachePath()
+	os.MkdirAll(filepath.Dir(path), 0755)
+	os.WriteFile(path, []byte(tag), 0644)
+}
+
 // backgroundVersionCheck runs a non-blocking version check and prints a notice
 // if a newer version is available. Call this as a goroutine.
 func backgroundVersionCheck(done chan<- string) {
+	if cached, ok := readCachedVersion(); ok {
+		if isNewer(cached, version) {
+			done <- cached
+		} else {
+			done <- ""
+		}
+		return
+	}
+
 	release, err := fetchLatestRelease()
 	if err != nil {
 		done <- ""
 		return
 	}
+	writeCachedVersion(release.TagName)
 	if isNewer(release.TagName, version) {
 		done <- release.TagName
 	} else {
