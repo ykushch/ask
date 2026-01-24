@@ -97,6 +97,17 @@ projects > ?tar -czf src.tar.gz src
 #   -f src.tar.gz: name the output file
 ```
 
+### Safety warnings
+
+Dangerous commands are flagged with a warning before execution:
+
+```
+  ⚠ Warning: Recursive deletion targeting a broad path
+→ rm -rf ~/Documents [Enter to run]
+```
+
+Detected patterns include `rm -rf`, `dd`, `mkfs`, `chmod 777`, `git push --force`, `DROP TABLE`, and more. Warnings are informational — you can still press Enter to proceed.
+
 ### Specify a different model
 
 ```bash
