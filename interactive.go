@@ -9,6 +9,8 @@ import (
 	"github.com/chzyer/readline"
 )
 
+var lastCommand string
+
 func runInteractive(model string) {
 	fmt.Println("ask — natural language shell (type !help for commands, Ctrl+D to exit)")
 	fmt.Println()
@@ -54,6 +56,20 @@ func runInteractive(model string) {
 			fmt.Printf("current model: %s\n", model)
 			continue
 		}
+		if strings.HasPrefix(input, "!explain ") {
+			cmd := strings.TrimSpace(input[9:])
+			if cmd == "" {
+				fmt.Println("Usage: !explain <command>")
+				continue
+			}
+			explanation, err := explain(model, cmd)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "\033[31merror: %v\033[0m\n", err)
+				continue
+			}
+			fmt.Println(explanation)
+			continue
+		}
 		if strings.HasPrefix(input, "!") {
 			cmd := input[1:]
 			if cmd == "" {
@@ -67,6 +83,35 @@ func runInteractive(model string) {
 				fmt.Fprint(os.Stderr, stderr)
 			}
 			addToHistory(cmd, stdout+stderr)
+			lastCommand = cmd
+			continue
+		}
+
+		// Explain commands
+		if input == "?" {
+			if lastCommand == "" {
+				fmt.Println("No previous command to explain.")
+				continue
+			}
+			explanation, err := explain(model, lastCommand)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "\033[31merror: %v\033[0m\n", err)
+				continue
+			}
+			fmt.Println(explanation)
+			continue
+		}
+		if strings.HasPrefix(input, "?") {
+			cmd := strings.TrimSpace(input[1:])
+			if cmd == "" {
+				continue
+			}
+			explanation, err := explain(model, cmd)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "\033[31merror: %v\033[0m\n", err)
+				continue
+			}
+			fmt.Println(explanation)
 			continue
 		}
 
@@ -94,6 +139,7 @@ func runInteractive(model string) {
 				fmt.Fprint(os.Stderr, stderr)
 			}
 			addToHistory(input, stdout+stderr)
+			lastCommand = input
 			continue
 		}
 
@@ -104,6 +150,7 @@ func runInteractive(model string) {
 			continue
 		}
 		confirmAndRun(command)
+		lastCommand = command
 	}
 }
 
@@ -114,10 +161,13 @@ func buildInteractivePrompt() string {
 }
 
 func printHelp() {
-	fmt.Println("  !help       — show this help")
-	fmt.Println("  !model NAME — switch Ollama model")
-	fmt.Println("  !model      — show current model")
-	fmt.Println("  !cmd        — run cmd directly (bypass AI)")
-	fmt.Println("  Ctrl+D      — exit")
+	fmt.Println("  !help        — show this help")
+	fmt.Println("  !model NAME  — switch Ollama model")
+	fmt.Println("  !model       — show current model")
+	fmt.Println("  !explain CMD — explain a shell command")
+	fmt.Println("  ?CMD         — explain a shell command (shorthand)")
+	fmt.Println("  ?            — explain the last executed command")
+	fmt.Println("  !cmd         — run cmd directly (bypass AI)")
+	fmt.Println("  Ctrl+D       — exit")
 	fmt.Println()
 }

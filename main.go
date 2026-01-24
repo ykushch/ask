@@ -31,6 +31,8 @@ func main() {
 	flag.BoolVar(&showVersion, "version", false, "Show version")
 	var doUpdate bool
 	flag.BoolVar(&doUpdate, "update", false, "Update ask to the latest version")
+	var doExplain bool
+	flag.BoolVar(&doExplain, "explain", false, "Explain a shell command instead of generating one")
 	flag.Parse()
 
 	if doUpdate {
@@ -66,6 +68,18 @@ func main() {
 
 	// One-shot mode: join all args as the query
 	query := strings.Join(args, " ")
+
+	if doExplain {
+		explanation, err := explain(*model, query)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "error: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Println(explanation)
+		printUpdateNotice(updateCh)
+		return
+	}
+
 	command, err := translate(*model, query)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)

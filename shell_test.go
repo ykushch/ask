@@ -50,6 +50,14 @@ func TestIsNaturalLanguage(t *testing.T) {
 		t.Error("isNaturalLanguage(\"!echo hello\") = true, want false (! prefix)")
 	}
 
+	// Test ? prefix forces explain (not natural language)
+	if isNaturalLanguage("?ls -la") {
+		t.Error("isNaturalLanguage(\"?ls -la\") = true, want false (? prefix)")
+	}
+	if isNaturalLanguage("?") {
+		t.Error("isNaturalLanguage(\"?\") = true, want false (? prefix)")
+	}
+
 	// Test known commands without arguments
 	if isNaturalLanguage("whoami") {
 		t.Error("isNaturalLanguage(\"whoami\") = true, want false (known command)")

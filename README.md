@@ -70,8 +70,32 @@ Interactive commands:
 - `!help` — show available commands
 - `!model NAME` — switch model
 - `!model` — show current model
+- `!explain CMD` — explain a shell command
+- `?CMD` — explain a shell command (shorthand)
+- `?` — explain the last executed command
 - `!cmd` — run `cmd` directly (bypass AI)
 - `Ctrl+D` — exit
+
+### Explain mode
+
+Don't know what a command does? Ask for an explanation:
+
+```bash
+ask --explain "find . -name '*.go' -exec grep 'func main' {} +"
+# Finds all .go files in the current directory tree and searches each one for lines containing "func main".
+#   -name '*.go': match files ending in .go
+#   -exec grep 'func main' {} +: run grep on the matched files
+```
+
+Also works in interactive mode with the `?` prefix:
+
+```
+projects > ?tar -czf src.tar.gz src
+# Compresses the src directory into a gzipped tar archive named src.tar.gz.
+#   -c: create a new archive
+#   -z: compress with gzip
+#   -f src.tar.gz: name the output file
+```
 
 ### Specify a different model
 

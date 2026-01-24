@@ -28,6 +28,9 @@ func isNaturalLanguage(input string) bool {
 	if strings.HasPrefix(input, "!") {
 		return false
 	}
+	if strings.HasPrefix(input, "?") {
+		return false
+	}
 	if knownCommands[input] {
 		return false
 	}
