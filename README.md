@@ -118,3 +118,13 @@ git clone https://github.com/ykushch/ask.git
 cd ask
 go build -o ask .
 ```
+
+## Development
+
+```bash
+# Set up git hooks (runs tests on commit)
+make setup
+
+# Run tests
+make test
+```
