@@ -75,6 +75,7 @@ func runInteractive(model string) {
 			if cmd == "" {
 				continue
 			}
+			warnIfDangerous(cmd)
 			stdout, stderr, _ := executeCommand(cmd)
 			if stdout != "" {
 				fmt.Print(stdout)
@@ -131,6 +132,7 @@ func runInteractive(model string) {
 
 		// Direct shell command (not natural language)
 		if !isNaturalLanguage(input) {
+			warnIfDangerous(input)
 			stdout, stderr, _ := executeCommand(input)
 			if stdout != "" {
 				fmt.Print(stdout)

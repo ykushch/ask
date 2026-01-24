@@ -55,6 +55,7 @@ func executeCommand(cmd string) (string, string, error) {
 }
 
 func confirmAndRun(cmd string) {
+	warnIfDangerous(cmd)
 	fmt.Printf("\033[33m→ %s\033[0m [Enter to run] ", cmd)
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
