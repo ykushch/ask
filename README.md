@@ -19,6 +19,14 @@
 
 A CLI tool that translates what you mean into what to type, using [Ollama](https://ollama.com) models running entirely on your machine.
 
+## Features
+
+- **Runs 100% locally** — No API keys, no cloud, no data leaves your machine
+- **Project-aware** — Detects Go, Node, Python, Rust, and tailors commands accordingly
+- **Explain mode** — Don't know what a command does? Ask `?tar -czf`
+- **Safety warnings** — Flags dangerous commands like `rm -rf` before execution
+- **Interactive REPL** — Conversational shell with command history context
+
 ## Install
 
 ```bash
@@ -96,6 +104,19 @@ projects > ?tar -czf src.tar.gz src
 #   -z: compress with gzip
 #   -f src.tar.gz: name the output file
 ```
+
+### Project-aware suggestions
+
+Commands are tailored to your project type. `ask` detects signature files in the current directory:
+
+| File | Detected As | Example |
+|------|-------------|---------|
+| `go.mod` | Go | `ask run tests` → `go test ./...` |
+| `package.json` | Node.js | `ask run tests` → `npm test` |
+| `Cargo.toml` | Rust | `ask build` → `cargo build` |
+| `requirements.txt` | Python | `ask run app` → `python app.py` |
+| `Makefile` | Make-based | `ask build` → `make` |
+| `Dockerfile` | Docker | Docker-aware suggestions |
 
 ### Safety warnings
 
