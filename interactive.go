@@ -62,7 +62,10 @@ func runInteractive(model string) {
 				fmt.Println("Usage: !explain <command>")
 				continue
 			}
+			spinner := NewSpinner("Explaining...")
+			spinner.Start()
 			explanation, err := explain(model, cmd)
+			spinner.Stop()
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "\033[31merror: %v\033[0m\n", err)
 				continue
@@ -94,7 +97,10 @@ func runInteractive(model string) {
 				fmt.Println("No previous command to explain.")
 				continue
 			}
+			spinner := NewSpinner("Explaining...")
+			spinner.Start()
 			explanation, err := explain(model, lastCommand)
+			spinner.Stop()
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "\033[31merror: %v\033[0m\n", err)
 				continue
@@ -107,7 +113,10 @@ func runInteractive(model string) {
 			if cmd == "" {
 				continue
 			}
+			spinner := NewSpinner("Explaining...")
+			spinner.Start()
 			explanation, err := explain(model, cmd)
+			spinner.Stop()
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "\033[31merror: %v\033[0m\n", err)
 				continue
@@ -146,7 +155,10 @@ func runInteractive(model string) {
 		}
 
 		// Natural language → translate via Ollama
+		spinner := NewSpinner("Thinking...")
+		spinner.Start()
 		command, err := translate(model, input)
+		spinner.Stop()
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "\033[31merror: %v\033[0m\n", err)
 			continue

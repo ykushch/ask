@@ -70,14 +70,19 @@ func buildPrompt(userInput string) string {
 		shell = "/bin/sh"
 	}
 	osName := runtime.GOOS
-
 	history := formatHistory()
+	projectInfo := formatProjectInfo(cwd)
+
+	projectLine := ""
+	if projectInfo != "" {
+		projectLine = projectInfo + "\n"
+	}
 
 	return fmt.Sprintf(`You are a shell command translator. Convert the user's request into a shell command.
 Current directory: %s
 Operating system: %s
 Shell: %s
-
+%s
 Recent command history:
 %s
 
@@ -87,6 +92,7 @@ Rules:
 - If unclear, make a reasonable assumption
 - Prefer simple, common commands
 - Use the command history for context (e.g., "do that again", "delete the file I just created")
+- When applicable, prefer project-specific tools (e.g., "go test" for Go, "npm test" for Node.js)
 
-User request: %s`, cwd, osName, shell, history, userInput)
+User request: %s`, cwd, osName, shell, projectLine, history, userInput)
 }

@@ -70,7 +70,10 @@ func main() {
 	query := strings.Join(args, " ")
 
 	if doExplain {
+		spinner := NewSpinner("Explaining...")
+		spinner.Start()
 		explanation, err := explain(*model, query)
+		spinner.Stop()
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "error: %v\n", err)
 			os.Exit(1)
@@ -80,7 +83,10 @@ func main() {
 		return
 	}
 
+	spinner := NewSpinner("Thinking...")
+	spinner.Start()
 	command, err := translate(*model, query)
+	spinner.Stop()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
