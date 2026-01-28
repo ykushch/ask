@@ -8,6 +8,7 @@
 
 [![CI](https://github.com/ykushch/ask/actions/workflows/ci.yml/badge.svg)](https://github.com/ykushch/ask/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/ykushch/ask)](https://github.com/ykushch/ask/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/ykushch/ask/total)](https://github.com/ykushch/ask/releases)
 [![Go](https://img.shields.io/badge/Go-1.21-00ADD8?logo=go&logoColor=white)](https://golang.org)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-lightgrey)](https://github.com/ykushch/ask)
 [![Ollama](https://img.shields.io/badge/Ollama-local%20AI-1a1a2e)](https://ollama.com)
