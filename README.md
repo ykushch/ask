@@ -27,6 +27,7 @@ A CLI tool that translates what you mean into what to type, using [Ollama](https
 - **Explain mode** — Don't know what a command does? Ask `?tar -czf`
 - **Safety warnings** — Flags dangerous commands like `rm -rf` before execution
 - **Interactive REPL** — Conversational shell with command history context
+- **Usage statistics** — Track your usage with `--stats`
 
 ## Install
 
@@ -157,6 +158,31 @@ ask -v
 # model: qwen2.5-coder:7b
 # ollama: http://localhost:11434
 ```
+
+### Usage statistics
+
+Track how you use `ask` over time:
+
+```bash
+ask --stats
+# ask usage statistics
+# ────────────────────
+# Total invocations:     150
+# Commands generated:    120
+# Commands executed:      95  (79%)
+# Explain calls:          15
+# Interactive sessions:   20
+# One-shot commands:     100
+#
+# Model usage:
+#   qwen2.5-coder:7b    140  (93%)
+#   llama3               10  (7%)
+#
+# Stats file: ~/.ask/stats.json (12KB)
+# Tracking since: 2026-01-29
+```
+
+Statistics are stored locally in `~/.ask/stats.json`.
 
 ## Configuration
 
