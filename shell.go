@@ -54,7 +54,7 @@ func executeCommand(cmd string) (string, string, error) {
 	return stdout.String(), stderr.String(), err
 }
 
-func confirmAndRun(cmd string) {
+func confirmAndRun(cmd string, stats *Stats) {
 	warnIfDangerous(cmd)
 	fmt.Printf("\033[33m→ %s\033[0m [Enter to run] ", cmd)
 	scanner := bufio.NewScanner(os.Stdin)
@@ -63,6 +63,10 @@ func confirmAndRun(cmd string) {
 
 	if input != "" {
 		return
+	}
+
+	if stats != nil {
+		stats.RecordExecution()
 	}
 
 	if strings.HasPrefix(cmd, "cd ") {

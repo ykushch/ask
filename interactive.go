@@ -11,7 +11,7 @@ import (
 
 var lastCommand string
 
-func runInteractive(model string) {
+func runInteractive(model string, stats *Stats) {
 	fmt.Println("ask — natural language shell (type !help for commands, Ctrl+D to exit)")
 	fmt.Println()
 
@@ -62,6 +62,7 @@ func runInteractive(model string) {
 				fmt.Println("Usage: !explain <command>")
 				continue
 			}
+			stats.RecordExplain(model)
 			spinner := NewSpinner("Explaining...")
 			spinner.Start()
 			explanation, err := explain(model, cmd)
@@ -97,6 +98,7 @@ func runInteractive(model string) {
 				fmt.Println("No previous command to explain.")
 				continue
 			}
+			stats.RecordExplain(model)
 			spinner := NewSpinner("Explaining...")
 			spinner.Start()
 			explanation, err := explain(model, lastCommand)
@@ -113,6 +115,7 @@ func runInteractive(model string) {
 			if cmd == "" {
 				continue
 			}
+			stats.RecordExplain(model)
 			spinner := NewSpinner("Explaining...")
 			spinner.Start()
 			explanation, err := explain(model, cmd)
@@ -163,7 +166,8 @@ func runInteractive(model string) {
 			fmt.Fprintf(os.Stderr, "\033[31merror: %v\033[0m\n", err)
 			continue
 		}
-		confirmAndRun(command)
+		stats.RecordInteractiveCommand(model, input, command)
+		confirmAndRun(command, stats)
 		lastCommand = command
 	}
 }

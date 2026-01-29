@@ -33,6 +33,8 @@ func main() {
 	flag.BoolVar(&doUpdate, "update", false, "Update ask to the latest version")
 	var doExplain bool
 	flag.BoolVar(&doExplain, "explain", false, "Explain a shell command instead of generating one")
+	var doStats bool
+	flag.BoolVar(&doStats, "stats", false, "Show usage statistics")
 	flag.Parse()
 
 	if doUpdate {
@@ -50,6 +52,19 @@ func main() {
 		return
 	}
 
+	if doStats {
+		if err := ShowStats(); err != nil {
+			fmt.Fprintf(os.Stderr, "stats failed: %v\n", err)
+			os.Exit(1)
+		}
+		return
+	}
+
+	// Load stats for tracking
+	stats, _ := LoadStats()
+	stats.RecordInvocation()
+	defer stats.Save()
+
 	// Start background version check
 	updateCh := make(chan string, 1)
 	go backgroundVersionCheck(updateCh)
@@ -61,7 +76,8 @@ func main() {
 
 	args := flag.Args()
 	if len(args) == 0 {
-		runInteractive(*model)
+		stats.RecordInteractiveSession()
+		runInteractive(*model, stats)
 		printUpdateNotice(updateCh)
 		return
 	}
@@ -70,6 +86,7 @@ func main() {
 	query := strings.Join(args, " ")
 
 	if doExplain {
+		stats.RecordExplain(*model)
 		spinner := NewSpinner("Explaining...")
 		spinner.Start()
 		explanation, err := explain(*model, query)
@@ -91,7 +108,8 @@ func main() {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
 	}
-	confirmAndRun(command)
+	stats.RecordOneshotCommand(*model, query, command)
+	confirmAndRun(command, stats)
 	printUpdateNotice(updateCh)
 }
 
