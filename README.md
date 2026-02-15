@@ -184,6 +184,31 @@ ask --stats
 
 Statistics are stored locally in `~/.ask/stats.json`.
 
+## Recommended models
+ 
+The default model is `qwen2.5-coder:7b` — a good balance of speed and accuracy for shell command generation. Depending on your hardware and needs, you may want to try other models:
+ 
+| Model | Size | Best For | Pull Command |
+|-------|------|----------|--------------|
+| `qwen2.5-coder:7b` | 4.7 GB | General use (default) | `ollama pull qwen2.5-coder:7b` |
+| `deepseek-coder:6.7b` | 3.8 GB | Code-focused, lighter | `ollama pull deepseek-coder:6.7b` |
+| `nemotron-mini` | 2.7 GB | Lightweight, low-resource machines | `ollama pull nemotron-mini` |
+| `nemotron-3-nano` | 24 GB | Reasoning-heavy queries, 1M context | `ollama pull nemotron-3-nano` |
+| `deepseek-r1` | 4.7 GB | Reasoning tasks | `ollama pull deepseek-r1` |
+ 
+**Tips:**
+- For most users, the default `qwen2.5-coder:7b` works well
+- On machines with limited RAM (<8 GB), try `nemotron-mini` (2.7 GB) or `deepseek-coder:6.7b` (3.8 GB)
+- For complex commands requiring step-by-step reasoning, `nemotron-3-nano` or `deepseek-r1` may produce better results (requires 32 GB+ RAM)
+ 
+Switch models with `--model` or set `ASK_MODEL`:
+ 
+```bash
+ask --model nemotron-mini show disk usage
+# or
+export ASK_MODEL=nemotron-mini
+```
+
 ## Configuration
 
 | Variable | Description | Default |
